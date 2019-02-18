@@ -1,0 +1,4 @@
+*.tfplan
+*.tfstore
+terraform.tfvars
+.terraform
