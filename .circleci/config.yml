@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: hashicorp/terraform
+        entrypoint: ["/bin/sh"]
+    steps:
+      - checkout
+      - run:
+          name: install make
+          command: apk add --update make
+      - run:
+          name: test
+          command: make test
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - test

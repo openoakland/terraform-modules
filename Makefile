@@ -2,13 +2,13 @@ MODULES := \
     beanstalk_app \
     beanstalk_env
 
-MODULE_LINT_TARGETS := $(addprefix lint., $(MODULES))
+MODULE_TEST_TARGETS := $(addprefix test., $(MODULES))
 
 
-lint: $(MODULE_LINT_TARGETS)
+test: $(MODULE_TEST_TARGETS)
 
-$(MODULE_LINT_TARGETS): lint.%:
+$(MODULE_TEST_TARGETS): test.%:
 	cd $* && terraform init && terraform validate -check-variables=false
 
 
-.PHONY: lint $(MODULE_LINT_TARGETS)
+.PHONY: test $(MODULE_TEST_TARGETS)
