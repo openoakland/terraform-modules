@@ -9,7 +9,8 @@ module "postgresdb_test" {
   namespace   = "terraform-modules-test"
   db_name     = "terraform_modules"
   db_password = "database-secret"
-  db_username = "dbuser"
+  db_username = "db_test_user"
+  deletion_protection = false
 }
 
 module "beanstalk_env_test" {

@@ -1,5 +1,9 @@
+data "aws_route53_zone" "environment" {
+  name = "${var.dns_zone}."
+}
+
 resource "aws_route53_record" "environment" {
-  zone_id = "${var.dns_zone_id}"
+  zone_id = "${data.aws_route53_zone.environment.zone_id}"
   name    = "${var.app_name}-${var.app_instance}"
   type    = "CNAME"
   ttl     = 300
@@ -8,7 +12,7 @@ resource "aws_route53_record" "environment" {
 
 // Create an SSL/TLS certificate for the domain
 resource "aws_acm_certificate" "environment" {
-  domain_name       = "${var.app_name}-${var.app_instance}.${var.dns_zone_name}"
+  domain_name       = "${var.app_name}-${var.app_instance}.${var.dns_zone}"
   validation_method = "DNS"
 
   lifecycle {
@@ -20,7 +24,7 @@ resource "aws_acm_certificate" "environment" {
 resource "aws_route53_record" "cert_validation" {
   name    = "${aws_acm_certificate.environment.domain_validation_options.0.resource_record_name}"
   type    = "${aws_acm_certificate.environment.domain_validation_options.0.resource_record_type}"
-  zone_id = "${var.dns_zone_id}"
+  zone_id = "${data.aws_route53_zone.environment.zone_id}"
   records = ["${aws_acm_certificate.environment.domain_validation_options.0.resource_record_value}"]
   ttl     = 60
 }

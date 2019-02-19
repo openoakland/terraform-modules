@@ -16,12 +16,8 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
-variable "dns_zone_name" {
-  description = "DNS zone (name) to use for beanstalk application."
-}
-
-variable "dns_zone_id" {
-  description = "DNS zone (id) to use for beanstalk application."
+variable "dns_zone" {
+  description = "DNS zone to use for beanstalk application e.g. aws.example.com"
 }
 
 variable "environment_variables" {
