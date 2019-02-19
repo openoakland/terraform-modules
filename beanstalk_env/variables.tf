@@ -2,18 +2,6 @@ variable "app_name" {
   description = "Slugified name of the beanstalk application."
 }
 
-variable "db_name" {
-  description = "Name of the RDS database to create for the application."
-}
-
-variable "db_username" {
-  description = "RDS username to create for the application."
-}
-
-variable "db_password" {
-  description = "RDS password to create for the application."
-}
-
 variable "app_instance" {
   description = "Name of this beanstalk environment e.g. (dev, staging, production, etc)."
 }
@@ -36,13 +24,13 @@ variable "dns_zone_id" {
   description = "DNS zone (id) to use for beanstalk application."
 }
 
-variable "deletion_protection" {
-  description = "Enable deletion protection on various components."
-  default     = true
-}
-
 variable "environment_variables" {
   description = "Map of environment variables to set for this beanstalk environment."
   type        = "map"
   default     = {}
+}
+
+variable "security_groups" {
+  description = "List of security groups to attach to Beanstalk instances."
+  default     = []
 }
