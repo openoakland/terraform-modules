@@ -5,11 +5,11 @@ module "beanstalk_app_test" {
 }
 
 module "postgresdb_test" {
-  source      = "./postgresdb"
-  namespace   = "terraform-modules-test"
-  db_name     = "terraform_modules"
-  db_password = "database-secret"
-  db_username = "db_test_user"
+  source              = "./postgresdb"
+  namespace           = "terraform-modules-test"
+  db_name             = "terraform_modules"
+  db_password         = "database-secret"
+  db_username         = "db_test_user"
   deletion_protection = false
 }
 
@@ -18,7 +18,7 @@ module "beanstalk_env_test" {
 
   app_instance    = "test"
   app_name        = "terraform-modules"
-  dns_zone   = "aws.openoakland.org"
+  dns_zone        = "aws.openoakland.org"
   security_groups = ["${module.postgresdb_test.security_group_name}"]
 
   environment_variables = {
