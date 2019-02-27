@@ -11,6 +11,7 @@ module "postgresdb_test" {
   db_password         = "database-secret"
   db_username         = "db_test_user"
   deletion_protection = false
+  skip_final_snapshot = true
 }
 
 module "beanstalk_env_test" {

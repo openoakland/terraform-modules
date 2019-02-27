@@ -23,3 +23,8 @@ variable "security_groups_allowed" {
   description = "Security groups allowed to access the database."
   default     = []
 }
+
+variable "skip_final_snapshot" {
+  description = "Disable final snapshot creation on deletion."
+  default     = false
+}

@@ -30,6 +30,7 @@ resource "aws_db_instance" "database" {
   publicly_accessible       = "false"
   backup_retention_period   = "7"
   backup_window             = "10:00-10:30"
+  skip_final_snapshot       = "${var.skip_final_snapshot}"
 
   vpc_security_group_ids = [
     "${aws_security_group.database.id}",
