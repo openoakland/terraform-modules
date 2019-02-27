@@ -63,6 +63,12 @@ resource "aws_elastic_beanstalk_environment" "environment" {
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
+    name      = "EC2KeyName"
+    value     = "${var.key_pair}"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
     value     = "${join(",", concat(list(aws_security_group.instances.name), var.security_groups))}"
   }

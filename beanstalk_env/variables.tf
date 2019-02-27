@@ -26,6 +26,11 @@ variable "environment_variables" {
   default     = {}
 }
 
+variable "key_pair" {
+  description = "SSH key pair to assign to EC2 instances."
+  default     = ""
+}
+
 variable "security_groups" {
   description = "List of security groups to attach to Beanstalk instances."
   default     = []
