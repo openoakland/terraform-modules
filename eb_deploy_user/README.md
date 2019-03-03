@@ -1,7 +1,7 @@
-# ci_user
+# eb_deploy_user
 
-Creates an IAM user for deploying applications to Elastic Beanstali with the
-`eb` command line tool with continuous integration and deployment.
+Creates an IAM user for deploying applications to Elastic Beanstalk with the
+`eb` command line tool for use with continuous integration and deployment.
 
 
 ## Usage
@@ -10,8 +10,8 @@ Create the CI user in your terraform template.
 
 ```hcl
 module "ci_user" {
-  source      = "github.com/openoakland/terraform-modules//ci_user?ref=2.0.0"
-  ci_username = "ci"
+  source      = "github.com/openoakland/terraform-modules//eb_deploy_username?ref=2.0.0"
+  eb_deploy_username = "ci"
 }
 
 output "ci_user_access_key_id" {
@@ -37,7 +37,7 @@ variables with the above values  in your project's settings.
 ## Variables
 
 
-### ci_username
+### eb_deploy_username
 
 IAM useranme.
 

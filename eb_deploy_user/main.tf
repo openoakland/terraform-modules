@@ -1,5 +1,5 @@
 resource "aws_iam_user" "ci" {
-  name = "${var.ci_username}"
+  name = "${var.eb_deploy_username}"
 }
 
 resource "aws_iam_access_key" "ci" {
