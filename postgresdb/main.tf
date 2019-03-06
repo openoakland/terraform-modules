@@ -19,7 +19,7 @@ resource "aws_db_instance" "database" {
   allocated_storage         = 20
   storage_type              = "gp2"
   engine                    = "postgres"
-  engine_version            = "10.5"
+  engine_version            = "${var.db_engine_version}"
   instance_class            = "db.t2.micro"
   deletion_protection       = "${var.deletion_protection}"
   identifier                = "${var.namespace}"

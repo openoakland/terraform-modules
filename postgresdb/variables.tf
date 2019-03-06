@@ -2,6 +2,11 @@ variable "namespace" {
   description = "Name to help identify database resources, e.g. app-production."
 }
 
+variable "db_engine_version" {
+  description = "Engine version for the database."
+  default     = "10.6"
+}
+
 variable "db_name" {
   description = "Name of the RDS database to create for the application."
 }
