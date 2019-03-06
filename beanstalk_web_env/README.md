@@ -1,6 +1,7 @@
-# beanstalk_env
+# beanstalk_web_env
 
-Creates an AWS Elastic Beanstalk environment.
+Creates an AWS Elastic Beanstalk web environment with load balancer and auto
+scaling group.
 
 
 ## Usage
@@ -13,7 +14,7 @@ module "myapp" {
 }
 
 module "myapp_prod_web" {
-  source         = "github.com/openoakland/terraform-modules//beanstalk_env?ref=v2.0.0"
+  source         = "github.com/openoakland/terraform-modules//beanstalk_web_env?ref=v2.0.0"
   app_name       = "myapp"
   app_instance   = "production"
   dns_zone_name  = "myapp.aws.example.com"
@@ -27,9 +28,9 @@ module "myapp_prod_web" {
 
 ### Variables
 
-See [beanstalk_env/variables.tf](./variables.tf).
+See [beanstalk_web_env/variables.tf](./variables.tf).
 
 
 ### Outputs
 
-See [beanstalk_env/outputs.tf](./outputs.tf).
+See [beanstalk_web_env/outputs.tf](./outputs.tf).

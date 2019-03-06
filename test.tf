@@ -15,7 +15,7 @@ module "postgresdb_test" {
 }
 
 module "beanstalk_env_test" {
-  source = "./beanstalk_env"
+  source = "./beanstalk_web_env"
 
   app_instance    = "test"
   app_name        = "terraform-modules"
