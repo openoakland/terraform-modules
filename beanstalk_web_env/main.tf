@@ -3,7 +3,7 @@ data "aws_elastic_beanstalk_solution_stack" "docker" {
   name_regex  = "^64bit Amazon Linux (.*) running Docker (.*)$"
 }
 
-resource "aws_security_group" "application" {
+resource "aws_security_group" "instances" {
   name = "${var.app_name}-${var.app_instance}-app"
 
   // Allow HTTP connections from the load balancer
@@ -48,42 +48,6 @@ resource "aws_security_group" "application-load-balancer" {
   }
 }
 
-resource "aws_security_group" "database" {
-  name = "${var.app_name}-${var.app_instance}-db"
-
-  // Allow HTTP connections from the application
-  ingress {
-    from_port = 5432
-    to_port   = 5432
-    protocol  = "tcp"
-
-    security_groups = [
-      "${aws_security_group.application.id}",
-    ]
-  }
-}
-
-resource "aws_db_instance" "database" {
-  allocated_storage         = 20
-  storage_type              = "gp2"
-  engine                    = "postgres"
-  engine_version            = "10.5"
-  instance_class            = "db.t2.micro"
-  deletion_protection       = "${var.deletion_protection}"
-  identifier                = "${var.app_name}-${var.app_instance}"
-  final_snapshot_identifier = "${var.app_name}-${var.app_instance}-final"
-  name                      = "${var.db_name}"
-  username                  = "${var.db_username}"
-  password                  = "${var.db_password}"
-  publicly_accessible       = "false"
-  backup_retention_period   = "7"
-  backup_window             = "10:00-10:30"
-
-  vpc_security_group_ids = [
-    "${aws_security_group.database.id}",
-  ]
-}
-
 resource "aws_elastic_beanstalk_environment" "environment" {
   name                = "${var.app_name}-${var.app_instance}"
   application         = "${var.app_name}"
@@ -99,8 +63,14 @@ resource "aws_elastic_beanstalk_environment" "environment" {
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
+    name      = "EC2KeyName"
+    value     = "${var.key_pair}"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value     = "${aws_security_group.application.name}"
+    value     = "${join(",", concat(list(aws_security_group.instances.name), var.security_groups))}"
   }
 
   setting {
@@ -183,12 +153,6 @@ resource "aws_elastic_beanstalk_environment" "environment" {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateEnabled"
     value     = "true"
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DATABASE_URL"
-    value     = "postgis://${var.db_username}:${var.db_password}@${aws_db_instance.database.endpoint}/${var.db_name}"
   }
 
   # Define environment variables for the application.

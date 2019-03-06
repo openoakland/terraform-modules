@@ -1,4 +1,6 @@
+*.lock.info
 *.tfplan
-*.tfstore
+*.tfstate
+*.tfstate.backup
 terraform.tfvars
 .terraform

@@ -2,10 +2,6 @@ data "aws_iam_role" "beanstalk_service" {
   name = "aws-elasticbeanstalk-service-role"
 }
 
-resource "aws_route53_zone" "default" {
-  name = "${var.dns_zone}"
-}
-
 resource "aws_elastic_beanstalk_application" "default" {
   name = "${var.app_name}"
 

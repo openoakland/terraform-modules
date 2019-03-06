@@ -1,6 +1,4 @@
-MODULES := \
-    beanstalk_app \
-    beanstalk_env
+MODULES := $(dir $(wildcard */))
 
 MODULE_TEST_TARGETS := $(addprefix test., $(MODULES))
 
