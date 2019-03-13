@@ -1,3 +1,8 @@
+locals {
+  # For backwards compatibility
+  default_name = "${var.app_name}-${var.app_instance}"
+}
+
 data "aws_elastic_beanstalk_solution_stack" "docker" {
   most_recent = true
   name_regex  = "^64bit Amazon Linux (.*) running Docker (.*)$"
@@ -49,7 +54,7 @@ resource "aws_security_group" "application-load-balancer" {
 }
 
 resource "aws_elastic_beanstalk_environment" "environment" {
-  name                = "${var.app_name}-${var.app_instance}"
+  name                = "${var.name != "" ? var.name : local.default_name}"
   application         = "${var.app_name}"
   solution_stack_name = "${data.aws_elastic_beanstalk_solution_stack.docker.name}"
 

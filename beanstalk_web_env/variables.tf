@@ -31,6 +31,13 @@ variable "key_pair" {
   default     = ""
 }
 
+variable "name" {
+  description = "Name to use for beanstalk environment and DNS."
+
+  # TODO remove me on major version bump
+  default = ""
+}
+
 variable "security_groups" {
   description = "List of security groups to attach to Beanstalk instances."
   default     = []
