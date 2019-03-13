@@ -1,7 +1,3 @@
-output "vpc_region" {
-  value = "${var.vpc_region}"
-}
-
 output "vpc_id" {
   value = "${aws_vpc.vpc_name.id}"
 }
