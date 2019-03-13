@@ -1,8 +1,3 @@
-variable "vpc_region" {
-  description = "AWS region"
-  default     = "us-east-1"
-}
-
 # VPC Config
 variable "vpc_name" {
   description = "VPC for Security"
