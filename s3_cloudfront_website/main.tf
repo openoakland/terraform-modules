@@ -1,3 +1,11 @@
+provider "aws" {
+  alias = "main"
+}
+
+provider "aws" {
+  alias = "cloudfront"
+}
+
 module "site" {
   source  = "github.com/riboseinc/terraform-aws-s3-cloudfront-website"
   version = "1.0.1"

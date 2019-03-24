@@ -27,20 +27,15 @@ module "beanstalk_env_test" {
   }
 }
 
-provider "aws" {
-  region = "us-west-1"
-  alias  = "cloudfront"
-}
-
-provider "aws" {
-  region = "us-west-1"
-  alias  = "main"
-}
-
 module "s3_cloudfront_website_test" {
   source = "./s3_cloudfront_website"
 
   host = "oo-s3-cf-website-terraform-modules-test"
+
+  providers = {
+    aws.main = "aws.main"
+    aws.cloudfront = "aws.cloudfront"
+  }
 }
 
 module "s3_deploy_user" {

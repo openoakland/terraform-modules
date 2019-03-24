@@ -22,6 +22,11 @@ module "s3_cloudfront_website" {
 
   host        = "mywebsite"
   zone        = "aws.openoakland.org"
+
+  providers = {
+    aws.main = "aws.main"
+    aws.cloudfront = "aws.cloudfront"
+  }
 }
 ```
 
