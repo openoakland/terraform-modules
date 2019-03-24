@@ -27,6 +27,22 @@ module "beanstalk_env_test" {
   }
 }
 
+provider "aws" {
+  region = "us-west-1"
+  alias = "cloudfront"
+}
+
+provider "aws" {
+  region = "us-west-1"
+  alias = "main"
+}
+
+module "s3_cloudfront_website_test" {
+  source = "./s3_cloudfront_website"
+
+  host = "oo-s3-cf-website-terraform-modules-test"
+}
+
 output "beanstalk_env_fqdn" {
   value = "${module.beanstalk_env_test.fqdn}"
 }
