@@ -32,8 +32,7 @@ module "s3_cloudfront_website" {
 
 Note that the [upstream
 module](https://github.com/riboseinc/terraform-aws-s3-cloudfront-website)
-requires the AWS CloudFront provider to be defined. In my testing, it does not
-require a `us-east-1` region.
+requires the AWS CloudFront provider to be defined for the `us-east-1` region.
 
 
 ### Variables

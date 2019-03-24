@@ -33,7 +33,7 @@ module "s3_cloudfront_website_test" {
   host = "oo-s3-cf-website-terraform-modules-test"
 
   providers = {
-    aws.main = "aws.main"
+    aws.main = "aws"
     aws.cloudfront = "aws.cloudfront"
   }
 }
