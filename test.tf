@@ -29,18 +29,24 @@ module "beanstalk_env_test" {
 
 provider "aws" {
   region = "us-west-1"
-  alias = "cloudfront"
+  alias  = "cloudfront"
 }
 
 provider "aws" {
   region = "us-west-1"
-  alias = "main"
+  alias  = "main"
 }
 
 module "s3_cloudfront_website_test" {
   source = "./s3_cloudfront_website"
 
   host = "oo-s3-cf-website-terraform-modules-test"
+}
+
+module "s3_deploy_user" {
+  source        = "./s3_deploy_user"
+  username      = "ci-terraform-modules-test"
+  s3_bucket_arn = "${module.s3_cloudfront_website_test.s3_bucket_arn}"
 }
 
 output "beanstalk_env_fqdn" {
