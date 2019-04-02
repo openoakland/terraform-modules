@@ -48,6 +48,23 @@ module "beanstalk_web" {
   }
 }
 
+module "s3_cloudfront_website_test" {
+  source = "./s3_cloudfront_website"
+
+  host = "oo-s3-cf-website-terraform-modules-test"
+
+  providers = {
+    aws.main = "aws"
+    aws.cloudfront = "aws.cloudfront"
+  }
+}
+
+module "s3_deploy_user" {
+  source        = "./s3_deploy_user"
+  username      = "ci-terraform-modules-test"
+  s3_bucket_arn = "${module.s3_cloudfront_website_test.s3_bucket_arn}"
+}
+
 output "beanstalk_env_fqdn" {
   value = "${module.beanstalk_web.fqdn}"
 }
