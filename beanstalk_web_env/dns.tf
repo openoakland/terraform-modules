@@ -4,7 +4,7 @@ data "aws_route53_zone" "environment" {
 
 resource "aws_route53_record" "environment" {
   zone_id = "${data.aws_route53_zone.environment.zone_id}"
-  name    = "${var.app_name}-${var.app_instance}"
+  name    = "${var.name != "" ? var.name : local.default_name}"
   type    = "CNAME"
   ttl     = 300
   records = ["${aws_elastic_beanstalk_environment.environment.cname}"]

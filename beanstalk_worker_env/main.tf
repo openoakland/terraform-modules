@@ -1,26 +1,10 @@
-locals {
-  # For backwards compatibility
-  default_name = "${var.app_name}-${var.app_instance}"
-}
-
 data "aws_elastic_beanstalk_solution_stack" "docker" {
   most_recent = true
   name_regex  = "^64bit Amazon Linux (.*) running Docker (.*)$"
 }
 
 resource "aws_security_group" "instances" {
-  name = "${var.app_name}-${var.app_instance}-app"
-
-  // Allow HTTP connections from the load balancer
-  ingress {
-    from_port = 80
-    to_port   = 80
-    protocol  = "tcp"
-
-    security_groups = [
-      "${aws_security_group.application-load-balancer.id}",
-    ]
-  }
+  name = "${var.app_name}-${var.app_instance}-worker"
 
   // Allow SSH access from anywhere
   ingress {
@@ -34,32 +18,12 @@ resource "aws_security_group" "instances" {
   }
 }
 
-resource "aws_security_group" "application-load-balancer" {
-  name = "${var.app_name}-${var.app_instance}-load-balancer"
-
-  // Allow HTTP and HTTPS connections from anywhere
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 resource "aws_elastic_beanstalk_environment" "environment" {
-  name                = "${var.name != "" ? var.name : local.default_name}"
+  name                = "${var.name}"
   application         = "${var.app_name}"
   solution_stack_name = "${data.aws_elastic_beanstalk_solution_stack.docker.name}"
+  tier                = "Worker"
 
-  // NOTE: See https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html for more settings.
-  // NOTE: The RDS settings do not work!
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
@@ -84,49 +48,10 @@ resource "aws_elastic_beanstalk_environment" "environment" {
     value     = "aws-elasticbeanstalk-ec2-role"
   }
 
-  // Use an Application Load Balancer (ALB) instead of the default Classic ELB
-  setting {
-    namespace = "aws:elasticbeanstalk:environment"
-    name      = "LoadBalancerType"
-    value     = "application"
-  }
-
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = "aws-elasticbeanstalk-service-role"
-  }
-
-  // Use our custom path for health checks since not all projects have an active root path
-  setting {
-    namespace = "aws:elasticbeanstalk:environment:process:default"
-    name      = "HealthCheckPath"
-    value     = "${var.health_check_path}"
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application"
-    name      = "Application Healthcheck URL"
-    value     = "${var.health_check_path}"
-  }
-
-  setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "SecurityGroups"
-    value     = "${aws_security_group.application-load-balancer.id}"
-  }
-
-  // Update the ELB/ALB to terminate SSL
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "Protocol"
-    value     = "HTTPS"
-  }
-
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "SSLCertificateArns"
-    value     = "${aws_acm_certificate.environment.arn}"
   }
 
   // Stream logs to Cloudwatch, and hold them for 90 days
@@ -252,6 +177,4 @@ resource "aws_elastic_beanstalk_environment" "environment" {
     name      = "${element(keys(var.environment_variables), 14)}"
     value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 14),"")}"
   }
-
-  depends_on = ["aws_acm_certificate_validation.environment"]
 }

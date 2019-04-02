@@ -6,18 +6,9 @@ variable "app_instance" {
   description = "Name of this beanstalk environment e.g. (dev, staging, production, etc)."
 }
 
-variable "health_check_path" {
-  description = "App endpoint to check the health of the instance."
-  default     = "/health/"
-}
-
 variable "instance_type" {
   description = "EC2 instance type to use for beanstalk instances."
   default     = "t3.micro"
-}
-
-variable "dns_zone" {
-  description = "DNS zone to use for beanstalk application e.g. aws.example.com"
 }
 
 variable "environment_variables" {
@@ -32,10 +23,7 @@ variable "key_pair" {
 }
 
 variable "name" {
-  description = "Name to use for beanstalk environment and DNS."
-
-  # TODO remove me on major version bump
-  default = ""
+  description = "Name of the Beanstalk Environment."
 }
 
 variable "security_groups" {
