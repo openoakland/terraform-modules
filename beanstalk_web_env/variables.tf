@@ -13,7 +13,10 @@ variable "health_check_path" {
 
 variable "instance_type" {
   description = "EC2 instance type to use for beanstalk instances."
-  default     = "t3.micro"
+  # Beanstalk does not seem to work well with micro instances. Seeing disk full
+  # errors, rate exceeded errors, and instances generally become unresponsive.
+  # Internet wisdom says you should start with small.
+  default     = "t3.small"
 }
 
 variable "dns_zone" {
