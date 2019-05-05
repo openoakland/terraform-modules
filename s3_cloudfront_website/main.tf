@@ -11,6 +11,7 @@ module "site" {
   version = "1.0.1"
 
   fqdn                = "${var.host}.${var.zone}"
+  aliases             = ["${var.aliases}"]
   ssl_certificate_arn = "${aws_acm_certificate_validation.cert.certificate_arn}"
   allowed_ips         = "${var.allowed_ips}"
 
@@ -21,17 +22,20 @@ module "site" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  provider          = "aws.cloudfront"
-  domain_name       = "${var.host}.${var.zone}"
-  validation_method = "DNS"
+  provider                  = "aws.cloudfront"
+  domain_name               = "${var.host}.${var.zone}"
+  subject_alternative_names = ["${var.aliases}"]
+  validation_method         = "DNS"
 }
 
 resource "aws_route53_record" "cert_validation" {
+  count = "${length(var.aliases) + 1}"
+
   provider = "aws.cloudfront"
-  name     = "${aws_acm_certificate.cert.domain_validation_options.0.resource_record_name}"
-  type     = "${aws_acm_certificate.cert.domain_validation_options.0.resource_record_type}"
+  name     = "${element(aws_acm_certificate.cert.domain_validation_options.*.resource_record_name, count.index)}"
+  type     = "${element(aws_acm_certificate.cert.domain_validation_options.*.resource_record_type, count.index)}"
+  records  = ["${element(aws_acm_certificate.cert.domain_validation_options.*.resource_record_value, count.index)}"]
   zone_id  = "${data.aws_route53_zone.site.id}"
-  records  = ["${aws_acm_certificate.cert.domain_validation_options.0.resource_record_value}"]
   ttl      = 60
 }
 

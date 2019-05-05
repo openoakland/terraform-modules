@@ -1,3 +1,8 @@
+variable "aliases" {
+  description = "Aliases to assign to the CloudFront distribution. This allows your distribution to be used under multiple names."
+  default     = []
+}
+
 variable "host" {
   description = "The host name of the resulting S3 website (the part of the domain excluding the zone)."
 }
