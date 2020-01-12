@@ -7,7 +7,7 @@ provider "aws" {
 }
 
 module "site" {
-  source  = "github.com/riboseinc/terraform-aws-s3-cloudfront-website"
+  source  = "riboseinc/s3-cloudfront-website/aws"
   version = "1.0.1"
 
   fqdn                = "${var.host}.${var.zone}"
