@@ -9,6 +9,7 @@ variable "zone" {
 
 # Allowed IPs that can directly access the S3 bucket
 variable "allowed_ips" {
-  type    = "list"
+  type    = list(string)
   default = ["0.0.0.0/0"]
 }
+
