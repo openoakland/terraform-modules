@@ -5,3 +5,4 @@ variable "username" {
 variable "policy" {
   description = "IAM policy to attach to the user."
 }
+

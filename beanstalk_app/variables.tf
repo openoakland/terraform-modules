@@ -12,3 +12,4 @@ variable "appversion_lifecycle_max_count" {
   description = "Maximum number of appversions to retain."
   default     = 32
 }
+

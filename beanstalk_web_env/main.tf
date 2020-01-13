@@ -18,7 +18,7 @@ resource "aws_security_group" "instances" {
     protocol  = "tcp"
 
     security_groups = [
-      "${aws_security_group.application-load-balancer.id}",
+      aws_security_group.application-load-balancer.id,
     ]
   }
 
@@ -54,28 +54,31 @@ resource "aws_security_group" "application-load-balancer" {
 }
 
 resource "aws_elastic_beanstalk_environment" "environment" {
-  name                = "${var.name != "" ? var.name : local.default_name}"
-  application         = "${var.app_name}"
-  solution_stack_name = "${data.aws_elastic_beanstalk_solution_stack.docker.name}"
+  name                = var.name != "" ? var.name : local.default_name
+  application         = var.app_name
+  solution_stack_name = data.aws_elastic_beanstalk_solution_stack.docker.name
 
   // NOTE: See https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html for more settings.
   // NOTE: The RDS settings do not work!
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
-    value     = "${var.instance_type}"
+    value     = var.instance_type
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "EC2KeyName"
-    value     = "${var.key_pair}"
+    value     = var.key_pair
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value     = "${join(",", concat(list(aws_security_group.instances.name), var.security_groups))}"
+    value = join(
+      ",",
+      concat([aws_security_group.instances.name], var.security_groups),
+    )
   }
 
   setting {
@@ -101,19 +104,19 @@ resource "aws_elastic_beanstalk_environment" "environment" {
   setting {
     namespace = "aws:elasticbeanstalk:environment:process:default"
     name      = "HealthCheckPath"
-    value     = "${var.health_check_path}"
+    value     = var.health_check_path
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application"
     name      = "Application Healthcheck URL"
-    value     = "${var.health_check_path}"
+    value     = var.health_check_path
   }
 
   setting {
     namespace = "aws:elbv2:loadbalancer"
     name      = "SecurityGroups"
-    value     = "${aws_security_group.application-load-balancer.id}"
+    value     = aws_security_group.application-load-balancer.id
   }
 
   // Update the ELB/ALB to terminate SSL
@@ -126,7 +129,7 @@ resource "aws_elastic_beanstalk_environment" "environment" {
   setting {
     namespace = "aws:elbv2:listener:443"
     name      = "SSLCertificateArns"
-    value     = "${aws_acm_certificate.environment.arn}"
+    value     = aws_acm_certificate.environment.arn
   }
 
   // Stream logs to Cloudwatch, and hold them for 90 days
@@ -165,93 +168,154 @@ resource "aws_elastic_beanstalk_environment" "environment" {
   # https://www.hashicorp.com/blog/hashicorp-terraform-0-12-preview-for-and-for-each#dynamic-nested-blocks
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 0)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 0),"")}"
+    name      = element(keys(var.environment_variables), 0)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 0),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 1)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 1),"")}"
+    name      = element(keys(var.environment_variables), 1)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 1),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 2)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 2),"")}"
+    name      = element(keys(var.environment_variables), 2)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 2),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 3)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 3),"")}"
+    name      = element(keys(var.environment_variables), 3)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 3),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 4)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 4),"")}"
+    name      = element(keys(var.environment_variables), 4)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 4),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 5)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 5),"")}"
+    name      = element(keys(var.environment_variables), 5)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 5),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 6)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 6),"")}"
+    name      = element(keys(var.environment_variables), 6)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 6),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 7)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 7),"")}"
+    name      = element(keys(var.environment_variables), 7)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 7),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 8)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 8),"")}"
+    name      = element(keys(var.environment_variables), 8)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 8),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 9)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 9),"")}"
+    name      = element(keys(var.environment_variables), 9)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 9),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 10)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 10),"")}"
+    name      = element(keys(var.environment_variables), 10)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 10),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 11)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 11),"")}"
+    name      = element(keys(var.environment_variables), 11)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 11),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 12)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 12),"")}"
+    name      = element(keys(var.environment_variables), 12)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 12),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 13)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 13),"")}"
+    name      = element(keys(var.environment_variables), 13)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 13),
+      "",
+    )
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.environment_variables), 14)}"
-    value     = "${lookup(var.environment_variables, element(keys(var.environment_variables), 14),"")}"
+    name      = element(keys(var.environment_variables), 14)
+    value = lookup(
+      var.environment_variables,
+      element(keys(var.environment_variables), 14),
+      "",
+    )
   }
 
-  depends_on = ["aws_acm_certificate_validation.environment"]
+  depends_on = [aws_acm_certificate_validation.environment]
 }
+
