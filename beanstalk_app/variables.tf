@@ -1,6 +1,6 @@
 variable "app_name" {
   description = "Name of the Elastic Beanstalk application to create."
-  type        = "string"
+  type        = string
 }
 
 variable "delete_source_from_s3" {

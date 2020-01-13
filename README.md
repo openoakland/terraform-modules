@@ -10,7 +10,7 @@ Various [Terraform](https://www.terraform.io/) modules used to provision resourc
 
 You'll need to install these.
 
-- [Terraform](https://www.terraform.io/downloads.html) v0.11+
+- [Terraform](https://www.terraform.io/downloads.html) v0.12+
 
 
 ## Development
