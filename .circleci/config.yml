@@ -2,7 +2,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: hashicorp/terraform
+      - image: hashicorp/terraform:0.12.19
         entrypoint: ["/bin/sh"]
     steps:
       - checkout
