@@ -27,10 +27,10 @@ module "beanstalk_worker" {
   app_instance    = "test"
   app_name        = "terraform-modules"
   name            = "terraform-modules-worker"
-  security_groups = ["${module.postgresdb_test.security_group_name}"]
+  security_groups = [module.postgresdb_test.security_group_name]
 
   environment_variables = {
-    DATABASE_URL = "${module.postgresdb_test.database_url}"
+    DATABASE_URL = module.postgresdb_test.database_url
   }
 }
 
@@ -41,10 +41,10 @@ module "beanstalk_web" {
   app_instance    = "test"
   app_name        = "terraform-modules"
   dns_zone        = "aws.openoakland.org"
-  security_groups = ["${module.postgresdb_test.security_group_name}"]
+  security_groups = [module.postgresdb_test.security_group_name]
 
   environment_variables = {
-    DATABASE_URL = "${module.postgresdb_test.database_url}"
+    DATABASE_URL = module.postgresdb_test.database_url
   }
 }
 
@@ -54,17 +54,17 @@ module "s3_cloudfront_website_test" {
   host = "oo-s3-cf-website-terraform-modules-test"
 
   providers = {
-    aws.main = "aws"
-    aws.cloudfront = "aws.cloudfront"
+    aws.main       = aws
+    aws.cloudfront = aws.cloudfront
   }
 }
 
 module "s3_deploy_user" {
   source        = "./s3_deploy_user"
   username      = "ci-terraform-modules-test"
-  s3_bucket_arn = "${module.s3_cloudfront_website_test.s3_bucket_arn}"
+  s3_bucket_arn = module.s3_cloudfront_website_test.s3_bucket_arn
 }
 
 output "beanstalk_env_fqdn" {
-  value = "${module.beanstalk_web.fqdn}"
+  value = module.beanstalk_web.fqdn
 }

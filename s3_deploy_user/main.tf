@@ -1,6 +1,6 @@
 module "iam_user" {
   source   = "../iam_user"
-  username = "${var.username}"
+  username = var.username
 
   policy = <<EOF
 {
@@ -21,4 +21,6 @@ module "iam_user" {
     ]
 }
 EOF
+
 }
+

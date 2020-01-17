@@ -1,14 +1,14 @@
 resource "aws_iam_user" "ci" {
-  name = "${var.eb_deploy_username}"
+  name = var.eb_deploy_username
 }
 
 resource "aws_iam_access_key" "ci" {
-  user = "${aws_iam_user.ci.name}"
+  user = aws_iam_user.ci.name
 }
 
 resource "aws_iam_user_policy" "ci" {
   name = "eb-deploy"
-  user = "${aws_iam_user.ci.name}"
+  user = aws_iam_user.ci.name
 
   policy = <<EOF
 {
@@ -75,4 +75,6 @@ resource "aws_iam_user_policy" "ci" {
   ]
 }
 EOF
+
 }
+

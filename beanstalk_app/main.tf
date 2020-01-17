@@ -3,12 +3,13 @@ data "aws_iam_role" "beanstalk_service" {
 }
 
 resource "aws_elastic_beanstalk_application" "default" {
-  name = "${var.app_name}"
+  name = var.app_name
 
   // Retain the recent application versions/deploys
   appversion_lifecycle {
-    service_role          = "${data.aws_iam_role.beanstalk_service.arn}"
-    max_count             = "${var.appversion_lifecycle_max_count}"
-    delete_source_from_s3 = "${var.delete_source_from_s3}"
+    service_role          = data.aws_iam_role.beanstalk_service.arn
+    max_count             = var.appversion_lifecycle_max_count
+    delete_source_from_s3 = var.delete_source_from_s3
   }
 }
+

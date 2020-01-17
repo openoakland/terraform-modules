@@ -10,10 +10,11 @@ output "postgis_database_url" {
 
 output "security_group_id" {
   description = "Id of the security group with access to database."
-  value       = "${aws_security_group.allowed.id}"
+  value       = aws_security_group.allowed.id
 }
 
 output "security_group_name" {
   description = "Name of the security group with access to database."
-  value       = "${aws_security_group.allowed.name}"
+  value       = aws_security_group.allowed.name
 }
+
