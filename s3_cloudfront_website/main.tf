@@ -10,6 +10,7 @@ module "site" {
   source = "github.com/riboseinc/terraform-aws-s3-cloudfront-website?ref=8b040cc6"
 
   fqdn                = "${var.host}.${var.zone}"
+  aliases             = var.aliases
   ssl_certificate_arn = aws_acm_certificate_validation.cert.certificate_arn
   allowed_ips         = var.allowed_ips
 
@@ -28,6 +29,7 @@ resource "aws_acm_certificate" "cert" {
   provider          = aws.cloudfront
   domain_name       = "${var.host}.${var.zone}"
   validation_method = "DNS"
+  subject_alternative_names = var.aliases
 }
 
 resource "aws_route53_record" "cert_validation" {
@@ -42,7 +44,7 @@ resource "aws_route53_record" "cert_validation" {
 resource "aws_acm_certificate_validation" "cert" {
   provider                = aws.cloudfront
   certificate_arn         = aws_acm_certificate.cert.arn
-  validation_record_fqdns = [aws_route53_record.cert_validation.fqdn]
+  validation_record_fqdns = aws_acm_certificate.cert.domain_validation_options.*.resource_record_name
 }
 
 # Route 53 record for the static site
